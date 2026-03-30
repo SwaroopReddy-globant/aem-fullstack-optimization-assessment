@@ -33,6 +33,7 @@
                     <group>assessment</group>
                     <packageType>application</packageType>
                     <name>assessment.ui.apps</name>
+                    <version>${project.version}</version>
                     <allowIndexDefinitions>true</allowIndexDefinitions>
                     <embeddeds>
                         <embedded>
@@ -45,4 +46,56 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>auto-install-package</id>
+            <activation>
+                <property>
+                    <name>aem.host</name>
+                </property>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>install-package-to-aem</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>curl</executable>
+                                    <arguments>
+                                        <argument>-s</argument>
+                                        <argument>-S</argument>
+                                        <argument>-u</argument>
+                                        <argument>${aem.username}:${aem.password}</argument>
+                                        <argument>-F</argument>
+                                        <argument>file=@${project.build.directory}/${project.build.finalName}.zip</argument>
+                                        <argument>-F</argument>
+                                        <argument>install=true</argument>
+                                        <argument>-F</argument>
+                                        <argument>force=true</argument>
+                                        <argument>-F</argument>
+                                        <argument>strict=true</argument>
+                                        <argument>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</argument>
+                                    </arguments>
+                                    <successCodes>
+                                        <successCode>0</successCode>
+                                        <successCode>200</successCode>
+                                    </successCodes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

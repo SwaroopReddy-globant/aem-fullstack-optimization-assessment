@@ -6,5 +6,20 @@
         /glob "*"
         /type "allow"
     }
+    # Cache HTML pages
+    /0001 {
+      /glob "*.html"
+      /type "allow"
+    }
+    # Cache JSON responses
+    /0002 {
+      /glob "*.json"
+      /type "allow"
+    }
+  }
+  /ignoreUrlParams
+  {
+    /0001 { /glob "*" /type "allow" }
+  }
 }
 

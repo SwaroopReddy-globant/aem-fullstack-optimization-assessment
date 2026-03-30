@@ -1,7 +1,7 @@
 package com.assessment.core.services;
 
+import java.net.URL;
+
 public interface WeatherService {
-
-    String getForecast(String city) throws Exception;
+    String getWeather(URL url) throws Exception;
 }
-

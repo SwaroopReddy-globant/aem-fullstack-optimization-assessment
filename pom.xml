@@ -78,4 +78,26 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>auto-deploy-author</id>
+            <properties>
+                <aem.host>localhost</aem.host>
+                <aem.port>4504</aem.port>
+                <aem.username>admin</aem.username>
+                <aem.password>admin</aem.password>
+            </properties>
+        </profile>
+        <profile>
+            <id>auto-deploy-publisher</id>
+            <properties>
+                <aem.host>localhost</aem.host>
+                <aem.port>4503</aem.port>
+                <aem.username>admin</aem.username>
+                <aem.password>admin</aem.password>
+            </properties>
+        </profile>
+
+    </profiles>
 </project>

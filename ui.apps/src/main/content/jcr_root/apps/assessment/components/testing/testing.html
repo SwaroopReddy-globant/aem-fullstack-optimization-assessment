@@ -1,0 +1,10 @@
+<sly data-sly-use.weather="com.assessment.core.models.ConfigTestingModel"></sly>
+
+<div class="cmp-weather" data-city="${weather.city}">
+    <h2>${weather.city}</h2>
+    {weather.siteCountry}
+    {weather.siteLocale}
+    {weather.siteAdmin}
+    {weather.siteSection}
+
+</div>

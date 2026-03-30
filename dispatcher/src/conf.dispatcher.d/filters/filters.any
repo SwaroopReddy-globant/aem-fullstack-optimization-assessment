@@ -3,5 +3,20 @@
     /0010 { /type "allow" /url "/etc.clientlibs/*" }
     /0020 { /type "allow" /url "/bin/*" }
     /0030 { /type "allow" /url "/libs/granite/csrf/token.json" }
-}
 
+    /0000 { /type "deny" /url "*" }
+
+    /0040 { /type "allow" /method "GET" /url "/content/assessment/*" }
+
+    /0050 { /type "allow" /method "GET" /url "/content/assessment/*.model.json" }
+
+    /0060 { /type "deny" /url "/conf/*" }
+
+    /0070 { /type "deny" /url "/system/*" }
+
+    /0080 { /type "deny" /url "/crx/*" }
+
+    /0090 { /type "deny" /url "/system/console/*" }
+
+    /0011 { /type "deny" /url "/bin/querybuilder.json" }
+}

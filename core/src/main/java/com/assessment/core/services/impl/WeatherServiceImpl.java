@@ -1,26 +1,54 @@
 package com.assessment.core.services.impl;
 
+import com.assessment.core.services.HttpService;
 import com.assessment.core.services.WeatherService;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import org.apache.http.client.methods.HttpGet;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
-@Component(service = WeatherService.class, immediate = true)
+import java.net.URL;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Component(service = WeatherService.class)
 public class WeatherServiceImpl implements WeatherService {
 
-    private static final String API_KEY = "legacy-weather-api-key-12345";
-    private static final String ENDPOINT = "https://goweather.xyz/weather/%s?apikey=%s";
+    @Reference
+    private HttpService httpService;
+
+    private final Map<String, CacheObject> cache = new ConcurrentHashMap<>();
+
+    private static final long TTL = 5 * 60 * 1000;
+
+    private static class CacheObject {
+        String data;
+        long timestamp;
+    }
 
     @Override
-    public String getForecast(String city) throws Exception {
-        URL url = new URL(String.format(
-                ENDPOINT,
-                URLEncoder.encode(city, StandardCharsets.UTF_8),
-                API_KEY));
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        return new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+    public String getWeather(URL url) {
+
+        String key = url.toString();
+
+        try {
+            CacheObject cached = cache.get(key);
+            if (cached != null && (System.currentTimeMillis() - cached.timestamp) < TTL) {
+                return "CACHE: " + cached.data;
+            }
+            HttpGet request = new HttpGet(key);
+            request.setHeader("User-Agent", "Mozilla/5.0");
+            String response = httpService.execute(request);
+            CacheObject obj = new CacheObject();
+            obj.data = response;
+            obj.timestamp = System.currentTimeMillis();
+            cache.put(key, obj);
+            return response;
+        } catch (Exception e) {
+            CacheObject fallback = cache.get(key);
+            if (fallback != null) {
+                return "FALLBACK CACHE: " + fallback.data;
+            }
+            return "ERROR: " + e.getMessage();
+        }
     }
 }
