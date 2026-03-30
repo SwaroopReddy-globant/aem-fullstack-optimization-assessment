@@ -84,7 +84,7 @@
             <id>auto-deploy-author</id>
             <properties>
                 <aem.host>localhost</aem.host>
-                <aem.port>4504</aem.port>
+                <aem.port>4502</aem.port>
                 <aem.username>admin</aem.username>
                 <aem.password>admin</aem.password>
             </properties>
